@@ -1,22 +1,62 @@
-# Bowling WebApp (in project root)
+```markdown
+# Bowling WebApp
 
-Deze webapp staat in de projectroot `C:\Code\1`.
+This repository contains a small Flask-based bowling reservation webapp. Project root: `C:\Code\ThisIsTheEnd`.
 
-Opmerking: er is nu ook een client-only (staatloos) modus die geen Node/npm of server vereist.
+Summary
+- The app is a Flask server that renders Jinja templates from `Templates/`, serves static files from `Styles/` and `Public/`, and stores data in the SQLite database at `Database/bowling.db`.
+- Registration and login are handled server-side and user accounts are stored in the `users` table inside that SQLite DB (see `Database/init.sql`).
 
-Optie A — Client-only (geen Node nodig)
-- Open `C:\Code\1\Templates\index.html` direct in je browser (dubbelklik of sleep naar browser).
-- De app slaat reserveringen op in je browser via `localStorage` (alleen toegankelijk in die browser op dit apparaat).
-
-Optie B — Server (optioneel, als je Node/npm kunt draaien)
-- Vanuit projectroot:
+Quick start (recommended)
+1. Activate the project's virtual environment (created for this workspace):
 
 ```powershell
-cd C:\Code\1
-npm install
-npm start
+# Windows PowerShell - run from project root
+C:\Code\ThisIsTheEnd\.venv\Scripts\Activate.ps1
 ```
 
-De server luistert dan op `http://localhost:3000`.
+2. Install dependencies (if not already installed):
 
-Gebruik de client-only modus als je geen scripts kunt draaien op dit apparaat.
+```powershell
+python -m pip install -r .\requirements.txt
+```
+
+3. Create or initialize the database (only if `Database/bowling.db` is missing):
+
+```powershell
+python .\Database\create_db.py
+```
+
+4. Start the Flask development server (temporary dev secret shown below):
+
+```powershell
+# Optional: set a secret for this session
+$env:THISISTHEEND_SECRET = 'dev-secret'
+C:\Code\ThisIsTheEnd\.venv\Scripts\python.exe .\server.py
+```
+
+5. Open the app in your browser: `http://127.0.0.1:5000/`
+
+Notes about accounts and DB
+- Accounts are stored in `Database/bowling.db` in the `users` table. The schema is in `Database/init.sql` and contains: `id`, `username`, `password`, `role`, `display_name`.
+- New registrations hash the password using `werkzeug.security.generate_password_hash` and insert into `users` (role defaults to `client`).
+- There are example demo accounts inserted by `init.sql`: `client` / `client123` and `employee` / `employee123` (these demo passwords are included in the seed SQL for convenience).
+
+Templates and static files
+- Templates: `Templates/*.html` (rendered by Flask/Jinja)
+- Styles: `Styles/` (served by the `styles` route)
+- Public: `Public/` (served by the `public` route)
+
+Routes of interest
+- `/` → `index` (renders `Templates/index.html`)
+- `/login` → login page and POST handler
+- `/register` → registration page and POST handler
+- `/dashboard` → user dashboard (requires login)
+- `/logout` → logout
+
+Development notes
+- If you only want to preview static HTML/CSS (no server-side rendering or auth), you can open files from `Templates/` using VS Code Live Server — but Jinja tags will not be evaluated (they are rendered only by Flask).
+- For debugging, watch the terminal running `server.py` for error messages and Flask build errors (e.g. missing endpoints cause `url_for` BuildError).
+
+If you want, I can add a short PowerShell script to automate setup and run commands.
+```

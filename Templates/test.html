@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bowling Reserveren - Demo</title>
+    <link rel="stylesheet" href="../Styles/test.css">
+  </head>
+  <body>
+    <header>
+      <h1>Bowling Reservering</h1>
+    </header>
+
+    <main class="app">
+      <aside class="form">
+        <h2>Nieuwe reservering</h2>
+        <form id="reserve-form">
+          <label>Baan:
+            <select id="lane"></select>
+          </label>
+          <label>Naam: <input id="name" required></label>
+          <label>Starttijd: <input id="start" type="datetime-local" required></label>
+          <label>Duur (minuten): <input id="duration" type="number" value="60" min="15" step="15" required></label>
+          <button type="submit">Reserveer</button>
+        </form>
+        <div id="message" role="status" class="message"></div>
+      </aside>
+
+      <section class="list">
+        <h2>Reserveringen</h2>
+        <div id="reservations"></div>
+      </section>
+    </main>
+    <script src="../JavaScript/app.js"></script>
+  </body>
+  </html>

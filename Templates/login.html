@@ -7,6 +7,11 @@
 	<link rel="stylesheet" href="{{ url_for('styles', filename='account.css') }}">
 </head>
 <body>
+    {% if session.get('user_id') %}
+    <script>
+        window.location.href = "{{ url_for('index') }}";
+    </script>
+    {% endif %}
     <div class="login-container">
         <h1><div class="center">Login</div></h1>
         <form id="loginForm" action="{{ url_for('login') }}" method="post">
@@ -16,8 +21,9 @@
             <label for="login-password">Password</label>
             <input id="login-password" name="password" type="password" required>
 
-            <button class="center" type="submit">Login</button>
+            <button type="submit">Login</button>
         </form>
+        
         <div class="center">
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
@@ -29,4 +35,6 @@
         </div>
     </div>
 </body>
+    <div id="navbar"></div>
+    <script src="/JavaScript/navbar.js"></script>
 </html>

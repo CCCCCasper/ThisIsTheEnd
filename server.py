@@ -127,11 +127,12 @@ def register():
     return redirect(url_for('login'))
 
 
-@app.route('/logout')
+
+@app.route('/logout', methods=['POST'])
 def logout():
     session.clear()
-    flash('Logged out.')
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
+
 
 
 # Serve static asset folders referenced in templates
@@ -139,6 +140,14 @@ def logout():
 def styles(filename):
     return send_from_directory(str(ROOT / 'Styles'), filename)
 
+@app.route('/JavaScript/<path:filename>')
+def javascript(filename):
+    return send_from_directory(str(ROOT / 'JavaScript'), filename)
+
+
+@app.route('/Assets/<path:filename>')
+def assets(filename):
+    return send_from_directory(str(ROOT / 'Assets'), filename)
 
 @app.route('/Public/<path:filename>')
 def public(filename):

@@ -4,9 +4,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home</title>
+  <link rel="stylesheet" href="{{ url_for('styles', filename='index.css') }}">
 </head>
 <body>
-  <h1>Welcome to This Is The End</h1>
-  <a href="{{ url_for('login') }}">Go to login</a>
+  {% if session.get('user_id') %}
+
+  <div class="center"><h1>Welcome, {{ session.get('display_name') or session.get('username') }}!</h1></div>
+
+    <form action="{{ url_for('logout') }}" method="post">
+    <div class="center">
+      <button type="submit">Logout</button>
+    </div>
+  </form>
+
+  {% else %}
+
+    <script>
+      window.location.href = "{{ url_for('login') }}";
+    </script>
+
+  {% endif %}
+
+
+
+
+
+
+
 </body>
 </html>

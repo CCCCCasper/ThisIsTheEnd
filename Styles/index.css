@@ -7,9 +7,30 @@ body {
     background-color: rgb(255, 200, 0);
     display: flex;
     margin: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .center{
     text-align: center;
     margin: 0 auto;
+}
+
+.box {
+    margin: auto;
+    padding: 2vw;
+    border: 1px solid black;
+    border-radius: 20px;
+    background-color: white;
+    box-sizing: border-box;
+    width: 80%;
+    max-width: 600px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    color: black
+}
+.box:hover {
+    background-color: #cecece;
 }

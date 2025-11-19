@@ -11,12 +11,13 @@
 
   <div class="center"><h1>Welcome, {{ session.get('display_name') or session.get('username') }}!</h1></div>
 
-    <form action="{{ url_for('logout') }}" method="post">
-    <div class="center">
-      <button type="submit">Logout</button>
-    </div>
-  </form>
+    {% if session.get('role') == 'admin' %}
 
+        <a class="box" href="{{ url_for('admin_dashboard') }}">
+          <h2>Go to Admin Dashboard</h2>
+        </a>
+
+    {% endif %}
   {% else %}
 
     <script>
@@ -25,8 +26,22 @@
 
   {% endif %}
 
+  <a class="box" href="{{ url_for('reservering') }}">
+    <h2>Maak een reservering</h2>
+  </a>
+  <!-- <a class="box" href="{{ url_for('') }}">
+    <h2></h2>
+  </a>
+  <a class="box" href="{{ url_for('') }}">
+    <h2></h2>
+  </a> -->
 
 
+ <form action="{{ url_for('logout') }}" method="post">
+    <div class="center">
+      <button type="submit">Logout</button>
+    </div>
+  </form>
 
 
 

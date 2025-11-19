@@ -1,5 +1,9 @@
+<!doctype html>
+<html>
 <head>
-
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Register Account</title>
 	<link rel="stylesheet" href="{{ url_for('styles', filename='account.css') }}">
 
 </head>
@@ -12,13 +16,6 @@
 
 			<label for="register-display">Display name (optional)</label>
 			<input id="register-display" name="display_name" type="text">
-
-
-			<label for="register-role">Role</label>
-			<select id="register-role" name="role" required>
-				<option value="employee">Employee</option>
-				<option value="admin">Admin</option>
-			</select>
 
 			<label for="register-password">Password</label>
 			<input id="register-password" name="password" type="password" required>
@@ -34,7 +31,10 @@
 					<p class="message">{{ messages[0] }}</p>
 				{% endif %}
 			{% endwith %}
+
+			<p>Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
 		</div>
 	</div>
 </body>
 </html>
+

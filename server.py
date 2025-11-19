@@ -86,6 +86,7 @@ def login():
     session['user_id'] = user['id']
     session['username'] = user['username']
     session['display_name'] = user['display_name'] if 'display_name' in user.keys() else user['username']
+    session['role'] = user['role']
     flash('Logged in successfully.')
     return safe_redirect('dashboard')
 
@@ -93,7 +94,7 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
-        return render_template('create.html')
+        return render_template('register.html')
 
     username = request.form.get('username', '').strip()
     display_name = request.form.get('display_name', '').strip() or None
@@ -118,15 +119,28 @@ def register():
         return redirect(url_for('register'))
 
     hashed = generate_password_hash(password)
-    role = 'client'
+    role = request.form.get('role', 'client') or 'client'
     conn.execute('INSERT INTO users (username, password, role, display_name) VALUES (?, ?, ?, ?)',
                  (username, hashed, role, display_name))
     conn.commit()
     conn.close()
-    flash('Account created — please log in.')
+    flash('Account registered — please log in.')
     return redirect(url_for('login'))
 
+@app.route('/admin_dashboard')
+def admin_dashboard():
+    # admin_dashboard.html is expected in Templates/
+    return render_template('admin_dashboard.html')
 
+@app.route('/create')
+def create():
+    # create.html is expected in Templates/
+    return render_template('create.html')
+
+@app.route('/reservering')
+def reservering():
+    # reservering.html is expected in Templates/
+    return render_template('reservering.html')
 
 @app.route('/logout', methods=['POST'])
 def logout():

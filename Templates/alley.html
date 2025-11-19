@@ -1,0 +1,28 @@
+
+<html>
+<head>
+	<title>Alley Reservation</title>
+<head>
+	<title>Alley Reservation</title>
+	<link rel="stylesheet" href="{{ url_for('styles', filename='alley.css') }}">
+</head>
+	<div class="alley-container">
+		{% if reservation %}
+			<p><strong>Date:</strong> {{ reservation['date'] }}</p>
+			<p><strong>Start Time:</strong> {{ reservation['time'] }}</p>
+			<p><strong>End Time:</strong> {{ reservation['end_time'] }}</p>
+		{% else %}
+			<p>No reservation data found.</p>
+		{% endif %}
+
+		<h3>Bowling Lanes</h3>
+		<div class="lanes-grid">
+			{% for lane in range(1, 9) %}
+				<div class="lane-box">
+					Lane {{ lane }}
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<head>
+    <link rel="stylesheet" href="{{ url_for('styles', filename='reservation.css') }}">
+</head>
+
+<body>
+
+    <div class="reservation-container">
+        <h2>Make a Reservation</h2>
+        <form action="{{ url_for('make_reservation') }}" method="post">
+            <label for="date">Date</label>
+            <div class="custom-input">
+                <input type="date" id="date" name="date" required>
+            </div>
+            <label for="time">Start Time</label>
+            <div class="custom-input">
+                <select id="time" name="time" required>
+                    <option value="">Select a start time</option>
+                </select>
+            </div>
+            <label for="end_time">End Time</label>
+            <div class="custom-input">
+                <select id="end_time" name="end_time" required>
+                    <option value="">Select an end time</option>
+                </select>
+            </div>
+            <button type="submit">Next</button>
+        </form>
+    </div>
+    <script>
+    function pad(num) {
+        return num < 10 ? '0' + num : num;
+    }
+    function getTimeOptions(day, forEndTime = false) {
+        let startHour = 14;
+        let endHour = (day === 0 || day === 6) ? 24 : 22;
+        let options = [];
+        // For start time, go up to one before closing; for end time, include closing
+        let last = forEndTime ? endHour : endHour - 1;
+        for (let hour = startHour; hour <= last; hour++) {
+            options.push(pad(hour) + ':00');
+        }
+        return options;
+    }
+    function populateTimes() {
+        const dateInput = document.getElementById('date');
+        const timeSelect = document.getElementById('time');
+        const endTimeSelect = document.getElementById('end_time');
+        timeSelect.innerHTML = '<option value="">Select a start time</option>';
+        endTimeSelect.innerHTML = '<option value="">Select an end time</option>';
+        if (!dateInput.value) return;
+        const date = new Date(dateInput.value);
+        const day = date.getDay();
+        let options = getTimeOptions(day, false); // start time: up to one before closing
+        for (let i = 0; i < options.length; i++) {
+            let option = document.createElement('option');
+            option.value = options[i];
+            option.textContent = options[i];
+            timeSelect.appendChild(option);
+        }
+        // End time options will be set after start time is selected
+    }
+    function populateEndTimes() {
+        const dateInput = document.getElementById('date');
+        const timeSelect = document.getElementById('time');
+        const endTimeSelect = document.getElementById('end_time');
+        endTimeSelect.innerHTML = '<option value="">Select an end time</option>';
+        if (!dateInput.value || !timeSelect.value) return;
+        const date = new Date(dateInput.value);
+        const day = date.getDay();
+        let options = getTimeOptions(day, true); // end time: include closing
+        let startIndex = options.indexOf(timeSelect.value);
+        for (let i = startIndex + 1; i < options.length; i++) {
+            let option = document.createElement('option');
+            option.value = options[i];
+            option.textContent = options[i];
+            endTimeSelect.appendChild(option);
+        }
+    }
+    document.getElementById('date').addEventListener('change', function() {
+        populateTimes();
+        populateEndTimes();
+    });
+    document.getElementById('time').addEventListener('change', populateEndTimes);
+    window.addEventListener('DOMContentLoaded', function() {
+        populateTimes();
+        populateEndTimes();
+    });
+    </script>
+</body>

@@ -137,10 +137,30 @@ def create():
     # create.html is expected in Templates/
     return render_template('create.html')
 
-@app.route('/reservering')
-def reservering():
-    # reservering.html is expected in Templates/
-    return render_template('reservering.html')
+
+# Reservation form POST handler
+@app.route('/make_reservation', methods=['POST'])
+def make_reservation():
+    date = request.form.get('date')
+    time = request.form.get('time')
+    end_time = request.form.get('end_time')
+    if not date or not time or not end_time:
+        flash('Date, start time, and end time are required.')
+        return redirect(url_for('reservation'))
+    # Temporarily save reservation in session
+    session['reservation'] = {'date': date, 'time': time, 'end_time': end_time}
+    return redirect(url_for('alley'))
+
+# Reservation form page (GET)
+@app.route('/reservation')
+def reservation():
+    return render_template('reservation.html')
+
+# Alley page displays reservation
+@app.route('/alley')
+def alley():
+    reservation = session.get('reservation')
+    return render_template('alley.html', reservation=reservation)
 
 @app.route('/logout', methods=['POST'])
 def logout():

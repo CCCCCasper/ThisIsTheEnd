@@ -1,0 +1,53 @@
+
+body {
+    background: rgb(255, 200, 0);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.alley-container {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    padding: 2.5rem 2rem 2rem 2rem;
+    max-width: 700px;
+    width: 100%;
+    margin: 2rem auto;
+}
+
+h2 {
+    text-align: center;
+    color: #2d3a4a;
+}
+
+h3 {
+    text-align: center;
+    color: #2d3a4a;
+    margin-bottom: rem;
+}
+
+.lanes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+.lane-box {
+    background: #e3eaf2;
+    border-radius: 12px;
+    padding: 2.5rem 0;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2d3a4a;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    width: 90%;
+    margin: 0 auto;
+}

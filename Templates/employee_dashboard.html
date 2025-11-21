@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('styles', filename='alley.css') }}">
+    <style>
+        .dashboard-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .dashboard-table th, .dashboard-table td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        .dashboard-table th { background: #f4f4f4; }
+        .lane-header { background: #e0e0e0; font-weight: bold; }
+        .action-btn { margin: 0 4px; padding: 4px 10px; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h2>Alle Reserveringen</h2>
+        <form method="get" action="" style="display: flex; align-items: center; gap: 10px;">
+            <label for="filter_date">Datum:</label>
+            <input type="date" id="filter_date" name="filter_date" value="{{ filter_date|default('') }}">
+            <button type="submit">Toon</button>
+            <a href="{{ url_for('index') }}" class="action-btn" style="text-decoration: none;">Naar Home</a>
+        </form>
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+
+                    <th>Datum</th>
+                    <th>Starttijd</th>
+                    <th>Duur</th>
+                    <th>Eindtijd</th>
+                    <th>Klant</th>
+                    <th>Extra</th>
+                    <th>Acties</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lane in range(1, 9) %}
+                    <tr class="lane-header">
+                        <td colspan="6">Baan {{ lane }}</td>
+                    </tr>
+                    {% set lane_table = 'lane_' ~ lane %}
+                    {% set lane_reservations = reservations.get(lane_table, []) %}
+                    {% if lane_reservations %}
+                        {% for res in lane_reservations %}
+                            {% if not filter_date or res.start_iso.split('T')[0] == filter_date %}
+                            <tr>
+                                <td>{{ res.start_iso.split('T')[0] }}</td>
+                                <td>{{ res.start_iso.split('T')[1] }}</td>
+                                <td>{% set h = res.duration_minutes // 60 %}{% set m = res.duration_minutes % 60 %}{{ '%02d' % h }}:{{ '%02d' % m }}</td>
+                                <td>
+                                    {% set start = res.start_iso.split('T')[1] %}
+                                    {% set sh = start.split(':')[0]|int %}
+                                    {% set sm = start.split(':')[1]|int %}
+                                    {% set total = sh * 60 + sm + res.duration_minutes %}
+                                    {% set eh = (total // 60) % 24 %}
+                                    {% set em = total % 60 %}
+                                    {{ '%02d' % eh }}:{{ '%02d' % em }}
+                                </td>
+                                <td>{{ res.name }}</td>
+                                <td>{{ res.extra }}</td>
+                                <td>
+                                    <button class="action-btn">Bewerk</button>
+                                    <button class="action-btn">Verwijder</button>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6">Geen reserveringen voor deze baan.</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

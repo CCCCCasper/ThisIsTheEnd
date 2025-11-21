@@ -7,22 +7,30 @@
 	<link rel="stylesheet" href="{{ url_for('styles', filename='alley.css') }}">
 </head>
 	<div class="alley-container">
+			<button class="back-btn" onclick="window.history.back(); return false;">&larr; Back</button>
 		{% if reservation %}
-			<p><strong>Date:</strong> {{ reservation['date'] }}</p>
-			<p><strong>Start Time:</strong> {{ reservation['time'] }}</p>
-			<p><strong>End Time:</strong> {{ reservation['end_time'] }}</p>
+			<p>good</p>
 		{% else %}
 			<p>No reservation data found.</p>
 		{% endif %}
 
 		<h3>Bowling Lanes</h3>
-		<div class="lanes-grid">
-			{% for lane in range(1, 9) %}
-				<div class="lane-box">
-					Lane {{ lane }}
-				</div>
-			{% endfor %}
-		</div>
+		<form action="{{ url_for('select_lane') }}" method="post">
+			<div class="lanes-grid">
+				{% for lane in range(1, 9) %}
+					{% set available = lane in available_lanes %}
+					<label class="lane-box {{ 'lane-available' if available else 'lane-unavailable' }}">
+						<input type="radio" name="lane" value="{{ lane }}" {% if not available %}disabled{% endif %} {% if available %}required{% endif %} style="margin-right: 1rem; transform: scale(1.3); vertical-align: middle;">
+						Lane {{ lane }}
+					</label>
+				{% endfor %}
+			</div>
+			{% if available_lanes %}
+				<button type="submit" class="lane-select-btn">Reserve Lane</button>
+			{% else %}
+				<div style="text-align: center; color: #b00; font-weight: bold; margin-top: 1.5rem;">Geen banen beschikbaar voor dit tijdstip.</div>
+			{% endif %}
+		</form>
 	</div>
 </body>
 </html>

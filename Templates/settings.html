@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Instellingen</title>
+    <link rel="stylesheet" href="{{ url_for('styles', filename='settings.css') }}">
+</head>
+<body>
+    <div class="settings-container">
+        <h2>Account Instellingen</h2>
+        <form method="post" action="{{ url_for('edit_account') }}">
+            <label for="username">Gebruikersnaam wijzigen</label>
+            <input type="text" id="username" name="username" value="{{ user.username }}" required>
+            <label for="display_name">Weergavenaam wijzigen</label>
+            <input type="text" id="display_name" name="display_name" value="{{ user.display_name }}" required>
+            <label for="password">Nieuw wachtwoord</label>
+            <input type="password" id="password" name="password" placeholder="Laat leeg om niet te wijzigen">
+            <button type="submit">Opslaan</button>
+        </form>
+        <form method="post" action="{{ url_for('logout') }}">
+            <button type="submit" class="logout">Uitloggen</button>
+        </form>
+        <form method="post" action="{{ url_for('delete_account') }}" onsubmit="return confirm('Weet je zeker dat je je account wilt verwijderen? Dit kan niet ongedaan worden gemaakt.');">
+            <button type="submit" class="danger">Account verwijderen</button>
+        </form>
+    </div>
+</body>
+</html>

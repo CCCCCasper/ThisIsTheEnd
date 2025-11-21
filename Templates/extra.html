@@ -1,0 +1,20 @@
+<head>
+	<title>Extra Options</title>
+	<link rel="stylesheet" href="{{ url_for('styles', filename='reservation.css') }}">
+</head>
+<body>
+	<div class="reservation-container">
+        <button class="back-btn" onclick="window.history.back(); return false;">&larr; Back</button>
+		<h2>Kies een extra optie</h2>
+		<form action="{{ url_for('save_extra') }}" method="post">
+			<div class="custom-input">
+				<label><input type="radio" name="extra" value="snackpakket_basis" required> Snackpakket Basis</label><br>
+				<label><input type="radio" name="extra" value="snackpakket_deluxe"> Snackpakket Deluxe</label><br>
+				<label><input type="radio" name="extra" value="kinderpartij"> Kinderpartij</label><br>
+				<label><input type="radio" name="extra" value="vrijgezellenfeest"> Vrijgezellenfeest</label><br>
+				<label><input type="radio" name="extra" value="niks"> Niks</label>
+			</div>
+			<button type="submit">Next</button>
+		</form>
+	</div>
+</body>

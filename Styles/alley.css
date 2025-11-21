@@ -1,3 +1,53 @@
+.lane-available {
+    cursor: pointer;
+}
+.lane-unavailable {
+    cursor: not-allowed;
+}
+.lane-available {
+    background: #b6eab6 !important;
+    border: 2px solid #3bb143;
+}
+.lane-unavailable {
+    background: #f7b6b6 !important;
+    border: 2px solid #b13b3b;
+    color: #a00 !important;
+    opacity: 0.7;
+}
+.lane-select-btn {
+    display: block;
+    margin: 2rem auto 0 auto;
+    padding: 0.7rem 2.5rem;
+    background: rgb(255, 200, 0);
+    color: #2d3a4a;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.lane-select-btn:hover {
+    background: rgb(255, 220, 0);
+}
+.back-btn {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 1.5rem;
+    background: rgb(255, 200, 0);
+    color: #2d3a4a;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.back-btn:hover {
+    background: rgb(255, 220, 0);
+}
 
 body {
     background: rgb(255, 200, 0);

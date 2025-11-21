@@ -20,7 +20,6 @@ body {
 .box {
     margin: auto;
     padding: 2vw;
-    border: 1px solid black;
     border-radius: 20px;
     background-color: white;
     box-sizing: border-box;
@@ -33,4 +32,21 @@ body {
 }
 .box:hover {
     background-color: #cecece;
+}
+
+#logout {
+    margin-top: 2rem;
+    padding: 0.7rem 2.5rem;
+    background: white;
+    color: #2d3a4a;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+#logout:hover {
+    background: #f0f0f0;
 }

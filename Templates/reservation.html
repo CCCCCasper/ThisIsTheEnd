@@ -5,6 +5,7 @@
 <body>
 
     <div class="reservation-container">
+            <button class="back-btn" onclick="window.history.back(); return false;">&larr; Back</button>
         <h2>Make a Reservation</h2>
         <form action="{{ url_for('make_reservation') }}" method="post">
             <label for="date">Date</label>

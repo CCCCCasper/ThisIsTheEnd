@@ -1,0 +1,16 @@
+.dashboard-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+.dashboard-table th, .dashboard-table td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+.dashboard-table th { background: #f4f4f4; }
+.lane-header { background: #e0e0e0; font-weight: bold; }
+.action-btn { margin: 0 4px; padding: 4px 10px; }
+
+body {
+    background: rgb(255, 200, 0);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

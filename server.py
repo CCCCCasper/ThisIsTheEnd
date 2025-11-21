@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
 import sqlite3
 from pathlib import Path
@@ -45,6 +44,55 @@ def safe_redirect(endpoint, **values):
 @app.route('/extra', methods=['GET'])
 def extra():
     return render_template('extra.html')
+
+@app.route('/results', methods=['GET'])
+def results():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Niet ingelogd.')
+        return redirect(url_for('login'))
+    conn = get_db_connection()
+    reservations = {}
+    for lane in range(1, 9):
+        table = f'lane_{lane}'
+        cur = conn.execute(f'SELECT * FROM {table} ORDER BY start_iso')
+        reservations[table] = cur.fetchall()
+    conn.close()
+    return render_template('results.html', reservations=reservations, user_id=user_id)
+
+# Edit reservation (GET)    
+@app.route('/edit_reservation', methods=['GET'])
+def edit_reservation():
+    lane = request.args.get('lane')
+    start_iso = request.args.get('start_iso')
+    if not lane or not start_iso:
+        flash('Ongeldige reservering.')
+        return redirect(url_for('reservations'))
+    table = f'lane_{lane}'
+    conn = get_db_connection()
+    res = conn.execute(f'SELECT * FROM {table} WHERE start_iso = ?', (start_iso,)).fetchone()
+    conn.close()
+    if not res:
+        flash('Reservering niet gevonden.')
+        return redirect(url_for('reservations'))
+    # Render a simple edit form (implement as needed)
+    return render_template('edit_reservation.html', reservation=res, lane=lane)
+
+# Delete reservation (POST)
+@app.route('/delete_reservation', methods=['POST'])
+def delete_reservation():
+    lane = request.form.get('lane')
+    start_iso = request.form.get('start_iso')
+    if not lane or not start_iso:
+        flash('Ongeldige reservering.')
+        return redirect(url_for('reservations'))
+    table = f'lane_{lane}'
+    conn = get_db_connection()
+    conn.execute(f'DELETE FROM {table} WHERE start_iso = ?', (start_iso,))
+    conn.commit()
+    conn.close()
+    flash('Reservering verwijderd.')
+    return redirect(url_for('reservations'))
 
 # Handle extra selection POST
 @app.route('/save_extra', methods=['POST'])
@@ -252,22 +300,22 @@ def admin_dashboard():
     # admin_dashboard.html is expected in Templates/
     return render_template('admin_dashboard.html')
 
-@app.route('/employee_dashboard')
-def employee_dashboard():
+@app.route('/reservations')
+def reservations():
     import sqlite3
     from flask import request
     filter_date = request.args.get('filter_date', '')
     conn = get_db_connection()
-    reservations = {}
+    reservations_data = {}
     for lane in range(1, 9):
         table = f'lane_{lane}'
         if filter_date:
             cur = conn.execute(f"SELECT * FROM {table} WHERE start_iso LIKE ? ORDER BY start_iso", (f'{filter_date}%',))
         else:
             cur = conn.execute(f'SELECT * FROM {table} ORDER BY start_iso')
-        reservations[table] = cur.fetchall()
+        reservations_data[table] = cur.fetchall()
     conn.close()
-    return render_template('employee_dashboard.html', reservations=reservations, filter_date=filter_date)
+    return render_template('reservations.html', reservations=reservations_data, filter_date=filter_date)
 
 @app.route('/create')
 def create():

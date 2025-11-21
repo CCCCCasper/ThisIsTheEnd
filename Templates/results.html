@@ -1,0 +1,55 @@
+<head>
+    <meta charset="UTF-8">
+    <title>Mijn Reserveringen</title>
+    <link rel="stylesheet" href="{{ url_for('styles', filename='results.css') }}">
+</head>
+<body>
+    <div class="results-container">
+        <h2>Mijn Reserveringen</h2>
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th>Baan</th>
+                    <th>Datum</th>
+                    <th>Starttijd</th>
+                    <th>Duur</th>
+                    <th>Eindtijd</th>
+                    <th>Extra</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set found = false %}
+                {% for lane in range(1, 9) %}
+                    {% set lane_table = 'lane_' ~ lane %}
+                    {% set lane_reservations = reservations.get(lane_table, []) %}
+                    {% for res in lane_reservations %}
+                        {% if res.user_id == user_id %}
+                        {% set found = true %}
+                        <tr>
+                            <td>{{ lane }}</td>
+                            <td>{{ res.start_iso.split('T')[0] }}</td>
+                            <td>{{ res.start_iso.split('T')[1] }}</td>
+                            <td>{% set h = res.duration_minutes // 60 %}{% set m = res.duration_minutes % 60 %}{{ '%02d' % h }}:{{ '%02d' % m }}</td>
+                            <td>
+                                {% set start = res.start_iso.split('T')[1] %}
+                                {% set sh = start.split(':')[0]|int %}
+                                {% set sm = start.split(':')[1]|int %}
+                                {% set total = sh * 60 + sm + res.duration_minutes %}
+                                {% set eh = (total // 60) % 24 %}
+                                {% set em = total % 60 %}
+                                {{ '%02d' % eh }}:{{ '%02d' % em }}
+                            </td>
+                            <td>{{ res.extra }}</td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                {% if not found %}
+                <tr>
+                    <td colspan="6">Geen reserveringen gevonden.</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</body>

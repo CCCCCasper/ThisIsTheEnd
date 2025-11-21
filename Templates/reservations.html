@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('styles', filename='reservations.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h2>Alle Reserveringen</h2>
+        <form method="get" action="" style="display: flex; align-items: center; gap: 10px;">
+            <label for="filter_date">Datum:</label>
+            <input type="date" id="filter_date" name="filter_date" value="{{ filter_date|default('') }}">
+            <button type="submit">Toon</button>
+            <a href="{{ url_for('index') }}" class="action-btn" style="text-decoration: none;">Naar Home</a>
+        </form>
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Starttijd</th>
+                    <th>Duur</th>
+                    <th>Eindtijd</th>
+                    <th>Klant</th>
+                    <th>Extra</th>
+                    <th>Acties</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lane in range(1, 9) %}
+                    <tr class="lane-header">
+                        <td colspan="6">Baan {{ lane }}</td>
+                    </tr>
+                    {% set lane_table = 'lane_' ~ lane %}
+                    {% set lane_reservations = reservations.get(lane_table, []) %}
+                    {% if lane_reservations %}
+                        {% for res in lane_reservations %}
+                            {% if not filter_date or res.start_iso.split('T')[0] == filter_date %}
+                            <tr>
+                                <td>{{ res.start_iso.split('T')[0] }}</td>
+                                <td>{{ res.start_iso.split('T')[1] }}</td>
+                                <td>{% set h = res.duration_minutes // 60 %}{% set m = res.duration_minutes % 60 %}{{ '%02d' % h }}:{{ '%02d' % m }}</td>
+                                <td>
+                                    {% set start = res.start_iso.split('T')[1] %}
+                                    {% set sh = start.split(':')[0]|int %}
+                                    {% set sm = start.split(':')[1]|int %}
+                                    {% set total = sh * 60 + sm + res.duration_minutes %}
+                                    {% set eh = (total // 60) % 24 %}
+                                    {% set em = total % 60 %}
+                                    {{ '%02d' % eh }}:{{ '%02d' % em }}
+                                </td>
+                                <td>{{ res.name }}</td>
+                                <td>{{ res.extra }}</td>
+                                <td>
+                                    <form method="get" action="{{ url_for('edit_reservation') }}" style="display:inline;">
+                                        <input type="hidden" name="lane" value="{{ lane }}">
+                                        <input type="hidden" name="start_iso" value="{{ res.start_iso }}">
+                                        <button class="action-btn" type="submit">Bewerk</button>
+                                    </form>
+                                    <form method="post" action="{{ url_for('delete_reservation') }}" style="display:inline;" onsubmit="return confirm('Weet je zeker dat je deze reservering wilt verwijderen?');">
+                                        <input type="hidden" name="lane" value="{{ lane }}">
+                                        <input type="hidden" name="start_iso" value="{{ res.start_iso }}">
+                                        <button class="action-btn" type="submit">Verwijder</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6">Geen reserveringen voor deze baan.</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

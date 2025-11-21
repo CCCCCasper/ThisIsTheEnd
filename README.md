@@ -30,7 +30,6 @@ python .\Database\create_db.py
 4. Start the Flask development server (temporary dev secret shown below):
 
 ```powershell
-# Optional: set a secret for this session
 $env:THISISTHEEND_SECRET = 'dev-secret'
 C:\Code\ThisIsTheEnd\.venv\Scripts\python.exe .\server.py
 ```

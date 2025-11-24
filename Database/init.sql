@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
   username TEXT NOT NULL UNIQUE,
   password TEXT NOT NULL,
   role TEXT NOT NULL,
-  display_name TEXT
+  email TEXT
 );
 -- Create 8 separate tables, one per bowling lane (no central reservations table)
 -- Each lane table stores reservations for that specific lane.
@@ -99,4 +99,4 @@ CREATE TABLE IF NOT EXISTS lane_8 (
 );
 
 -- Insert demo accounts: one client and one employee
-INSERT OR IGNORE INTO users (username, password, role, display_name) VALUES ('admin', 'admin', 'admin', 'Demo admin');
+INSERT OR IGNORE INTO users (username, password, role, email) VALUES ('admin', 'admin', 'admin', 'admin@example.com');

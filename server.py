@@ -177,19 +177,23 @@ def login():
         return render_template('login.html')
 
     username = request.form.get('username', '').strip()
+    email = request.form.get('email', '').strip()
     password = request.form.get('password', '')
 
-    if not username or not password:
-        flash('Username and password are required.')
+    if not (username or email) or not password:
+        flash('Username, e-mail, and password are required.')
         return safe_redirect('login')
 
     conn = get_db_connection()
-    cur = conn.execute('SELECT * FROM users WHERE username = ?', (username,))
+    if email:
+        cur = conn.execute('SELECT * FROM users WHERE email = ?', (email,))
+    else:
+        cur = conn.execute('SELECT * FROM users WHERE username = ?', (username,))
     user = cur.fetchone()
     conn.close()
 
     if not user:
-        flash('No account found with that username.')
+        flash('No account found with that username or e-mail.')
         return safe_redirect('login')
 
     stored = user['password']
@@ -209,7 +213,7 @@ def login():
     # Successful login
     session['user_id'] = user['id']
     session['username'] = user['username']
-    session['display_name'] = user['display_name'] if 'display_name' in user.keys() else user['username']
+    session['email'] = user['email'] if 'email' in user.keys() else user['username']
     session['role'] = user['role']
     flash('Logged in successfully.')
     return safe_redirect('dashboard')
@@ -265,7 +269,7 @@ def register():
         return render_template('register.html')
 
     username = request.form.get('username', '').strip()
-    display_name = request.form.get('display_name', '').strip() or None
+    email = request.form.get('email', '').strip() or None
     password = request.form.get('password', '')
     password_confirm = request.form.get('password_confirm', '')
 
@@ -288,8 +292,8 @@ def register():
 
     hashed = generate_password_hash(password)
     role = request.form.get('role', 'client') or 'client'
-    conn.execute('INSERT INTO users (username, password, role, display_name) VALUES (?, ?, ?, ?)',
-                 (username, hashed, role, display_name))
+    conn.execute('INSERT INTO users (username, password, role, email) VALUES (?, ?, ?, ?)',
+                 (username, hashed, role, email))
     conn.commit()
     conn.close()
     flash('Account registered — please log in.')

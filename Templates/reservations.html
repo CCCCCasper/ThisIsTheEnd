@@ -11,7 +11,7 @@
         <h2>Alle Reserveringen</h2>
         <form method="get" action="" style="display: flex; align-items: center; gap: 10px;">
             <label for="filter_date">Datum:</label>
-            <input type="date" id="filter_date" name="filter_date" value="{{ filter_date|default('') }}">
+            <input type="date" id="filter_date" name="filter_date" value="{{ filter_date if filter_date else (now.strftime('%Y-%m-%d')) }}">
             <button type="submit">Toon</button>
             <a href="{{ url_for('index') }}" class="action-btn" style="text-decoration: none;">Naar Home</a>
         </form>

@@ -7,6 +7,7 @@
 </head>
 <body>
     <div class="settings-container">
+        <button class="back-btn" onclick="window.history.back(); return false;">&larr; Back</button>
         <h2>Account Instellingen</h2>
         <form method="post" action="{{ url_for('edit_account') }}">
             <label for="username">Gebruikersnaam wijzigen</label>
@@ -15,7 +16,7 @@
             <input type="email" id="email" name="email" value="{{ user.email }}" required>
             <label for="password">Nieuw wachtwoord</label>
             <input type="password" id="password" name="password" placeholder="Laat leeg om niet te wijzigen">
-            <button type="submit">Opslaan</button>
+            <button type="submit" class="save">Opslaan</button>
         </form>
         <form method="post" action="{{ url_for('logout') }}">
             <button type="submit" class="logout">Uitloggen</button>

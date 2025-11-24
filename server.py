@@ -308,7 +308,9 @@ def admin_dashboard():
 def reservations():
     import sqlite3
     from flask import request
+    from datetime import datetime
     filter_date = request.args.get('filter_date', '')
+    now = datetime.now()
     conn = get_db_connection()
     reservations_data = {}
     for lane in range(1, 9):
@@ -319,7 +321,7 @@ def reservations():
             cur = conn.execute(f'SELECT * FROM {table} ORDER BY start_iso')
         reservations_data[table] = cur.fetchall()
     conn.close()
-    return render_template('reservations.html', reservations=reservations_data, filter_date=filter_date)
+    return render_template('reservations.html', reservations=reservations_data, filter_date=filter_date, now=now)
 
 @app.route('/create')
 def create():

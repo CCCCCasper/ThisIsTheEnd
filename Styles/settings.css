@@ -7,3 +7,4 @@
 .settings-container button { padding: 8px 18px; border: none; border-radius: 4px; background: #1976d2; color: #fff; font-weight: 600; cursor: pointer; margin-right: 8px; }
 .settings-container .danger { background: #d32f2f; }
 .settings-container .logout { background: #757575; }
+body { background-color: rgb(255, 200, 0); font-family:Segoe UI,Arial,Helvetica,sans-serif;}

@@ -9,41 +9,32 @@
 <body>
   {% if session.get('user_id') %}
 
-  <div class="center"><h1>Welcome, {{ session.get('username') }}!</h1></div>
+    <div class="center"><h1>Welcome, {{ session.get('username') }}!</h1></div>
 
-    {% if session.get('role') == 'admin' %}
+    {% if session.get('role') == 'admin' or session.get('role') == 'employee' %}
 
-      <a class="box" href="{{ url_for('admin_dashboard') }}">
-        <h2>Go to Admin Dashboard</h2>
+      <a class="box" href="{{ url_for('dashboard') }}">
+        <h2>Go to the Dashboard</h2>
       </a>
 
-    {% elif session.get('role') == 'employee' %}
+    {% else %}
 
-      <a class="box" href="{{ url_for('reservations') }}">
-            <h2>Go to Reservations</h2>
-      </a>
-
+      <script>
+        window.location.href = "{{ url_for('login') }}";
+      </script>
     {% endif %}
-  {% else %}
-
-    <script>
-      window.location.href = "{{ url_for('login') }}";
-    </script>
 
   {% endif %}
 
-  <a class="box" href="{{ url_for('reservation') }}">
-    <h2>Maak een reservering</h2>
-  </a>
-  <a class="box" href="{{ url_for('results') }}">
-    <h2>Results</h2>
-  </a>
-    <a class="box" href="{{ url_for('settings') }}">
-    <h2>Settings</h2>
-  </a>
-
-
-
+    <a class="box" href="{{ url_for('reservation') }}">
+      <h2>Maak een reservering</h2>
+    </a>
+    <a class="box" href="{{ url_for('results') }}">
+      <h2>Results</h2>
+    </a>
+      <a class="box" href="{{ url_for('settings') }}">
+      <h2>Settings</h2>
+    </a>
 
 </body>
 </html>

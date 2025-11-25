@@ -123,9 +123,9 @@ def register():
     flash('Account registered — please log in.')
     return redirect(url_for('login'))
 
-@app.route('/admin_dashboard')
-def admin_dashboard():
-    return render_template('admin_dashboard.html')
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
 
 @app.route('/settings', methods=['GET'])
 def settings():
@@ -185,10 +185,13 @@ def delete_account():
     flash('Account verwijderd.')
     return redirect(url_for('index'))
 
-# Reservation pages
-@app.route('/create')
-def create():
-    return render_template('create.html')
+@app.route('/a_create')
+def a_create():
+    return render_template('a_create.html')
+
+@app.route('/e_create')
+def e_create():
+    return render_template('e_create.html')
 
 @app.route('/reservation')
 def reservation():
@@ -216,10 +219,10 @@ def save_extra():
         flash('Selecteer een extra optie.')
         return redirect(url_for('extra'))
     session['reservation_extra'] = extra
-    return redirect(url_for('alley'))
+    return redirect(url_for('lanes'))
 
-@app.route('/alley')
-def alley():
+@app.route('/lanes')
+def lanes():
     reservation = session.get('reservation')
     available_lanes = list(range(1, 9))
     if reservation:
@@ -252,7 +255,7 @@ def alley():
                 lanes.append(lane)
         conn.close()
         available_lanes = lanes
-    return render_template('alley.html', reservation=reservation, available_lanes=available_lanes)
+    return render_template('lanes.html', reservation=reservation, available_lanes=available_lanes)
 
 @app.route('/select_lane', methods=['POST'])
 def select_lane():
@@ -263,7 +266,7 @@ def select_lane():
     name = session.get('username', 'anonymous')
     if not lane or not reservation:
         flash('Selecteer een baan en maak eerst een reservering.')
-        return redirect(url_for('alley'))
+        return redirect(url_for('lanes'))
     date = reservation['date']
     start_time = reservation['time']
     end_time = reservation['end_time']
@@ -284,7 +287,7 @@ def select_lane():
     if cur.fetchone():
         conn.close()
         flash(f'Baan {lane} is al gereserveerd voor dit tijdstip.')
-        return redirect(url_for('alley'))
+        return redirect(url_for('lanes'))
     conn.execute(f"INSERT INTO {table} (start_iso, duration_minutes, user_id, name, extra) VALUES (?, ?, ?, ?, ?)",
                  (start_iso, duration, user_id, name, extra))
     conn.commit()

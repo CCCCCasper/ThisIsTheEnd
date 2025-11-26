@@ -13,6 +13,10 @@
     </script>
     {% endif %}
     <div class="login-container">
+
+        <a href="{{ url_for('index') }}">
+            <h2 class ="center">Go further without a account</h1>
+        </a>
         <h1><div class="center">Login</div></h1>
         <form id="loginForm" action="{{ url_for('login') }}" method="post">
             <label for="login-username">Username</label>

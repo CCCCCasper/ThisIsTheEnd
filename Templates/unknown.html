@@ -1,0 +1,31 @@
+<head>
+	<title>Extra Options</title>
+	<link rel="stylesheet" href="{{ url_for('styles', filename='reservation.css') }}">
+</head>
+<body>
+    {% if not session.get('user_id') %}
+        <div class="reservation-container">
+            <button class="back-btn" onclick="window.history.back(); return false;">&larr; Back</button>
+            <h2>Kies een extra optie</h2>
+            <form action="{{ url_for('save_unknown') }}" method="post">
+                <div class="custom-input">
+
+                        <label for="name">Naam</label>
+                        <input type="text" id="name" name="name" required>
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email" required>
+
+                    <!-- Add extra options here if needed -->
+                </div>
+                <button type="submit">Next</button>
+            </form>
+        </div>
+    {% else %}
+    
+        <script>
+            window.location.href = "{{ url_for('lanes') }}";
+        </script>
+
+    {% endif %}
+</body>
+

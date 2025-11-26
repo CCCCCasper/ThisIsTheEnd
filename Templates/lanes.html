@@ -7,22 +7,22 @@
 	<link rel="stylesheet" href="{{ url_for('styles', filename='alley.css') }}">
 </head>
 	<div class="alley-container">
-			<button class="back-btn" onclick="window.history.back(); return false;">&larr; Back</button>
-		{% if reservation %}
-			<p>good</p>
-		{% else %}
-			<p>No reservation data found.</p>
-		{% endif %}
+		<button class="back-btn" onclick="window.history.back(); return false;">&larr; Back</button>
 
 		<h3>Bowling Lanes</h3>
 		<form action="{{ url_for('select_lane') }}" method="post">
 			<div class="lanes-grid">
 				{% for lane in range(1, 9) %}
 					{% set available = lane in available_lanes %}
-					<label class="lane-box {{ 'lane-available' if available else 'lane-unavailable' }}">
-						<input type="radio" name="lane" value="{{ lane }}" {% if not available %}disabled{% endif %} {% if available %}required{% endif %} style="margin-right: 1rem; transform: scale(1.3); vertical-align: middle;">
-						Lane {{ lane }}
-					</label>
+					<div style="display: flex; flex-direction: column; align-items: center;">
+						<label class="lane-box {{ 'lane-available' if available else 'lane-unavailable' }}">
+							<input type="radio" name="lane" value="{{ lane }}" {% if not available %}disabled{% endif %} {% if available %}required{% endif %} style="margin-right: 1rem; transform: scale(1.3); vertical-align: middle;">
+							Lane {{ lane }}
+							{% if lane == 1 or lane == 2 %}
+								<div class="railing"><span style="display:block; font-size: 0.95em; color: #0077cc; margin-top: 0.3em;">Optionele railings beschikbaar</span></div>
+							{% endif %}
+						</label>
+					</div>
 				{% endfor %}
 			</div>
 			{% if available_lanes %}

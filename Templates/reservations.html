@@ -56,12 +56,12 @@
                                     <form method="get" action="{{ url_for('edit_reservation') }}" style="display:inline;">
                                         <input type="hidden" name="lane" value="{{ lane }}">
                                         <input type="hidden" name="start_iso" value="{{ res.start_iso }}">
-                                        <button class="action-btn" type="submit">Bewerk</button>
+                                        <button class="edit" type="submit">Bewerk</button>
                                     </form>
                                     <form method="post" action="{{ url_for('delete_reservation') }}" style="display:inline;" onsubmit="return confirm('Weet je zeker dat je deze reservering wilt verwijderen?');">
                                         <input type="hidden" name="lane" value="{{ lane }}">
                                         <input type="hidden" name="start_iso" value="{{ res.start_iso }}">
-                                        <button class="action-btn" type="submit">Verwijder</button>
+                                        <button class="delete" type="submit">Verwijder</button>
                                     </form>
                                 </td>
                             </tr>

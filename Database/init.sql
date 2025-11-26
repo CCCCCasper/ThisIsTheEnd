@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS lane_1 (
   duration_minutes INTEGER NOT NULL,
   user_id INTEGER REFERENCES users(id),
   name TEXT NOT NULL,
-  extra TEXT
+  extra TEXT,
+  email TEXT
 );
 
 
@@ -35,7 +36,8 @@ CREATE TABLE IF NOT EXISTS lane_2 (
   duration_minutes INTEGER NOT NULL,
   user_id INTEGER REFERENCES users(id),
   name TEXT NOT NULL,
-  extra TEXT
+  extra TEXT,
+  email TEXT
 );
 
 
@@ -45,7 +47,8 @@ CREATE TABLE IF NOT EXISTS lane_3 (
   duration_minutes INTEGER NOT NULL,
   user_id INTEGER REFERENCES users(id),
   name TEXT NOT NULL,
-  extra TEXT
+  extra TEXT,
+  email TEXT
 );
 
 
@@ -55,7 +58,8 @@ CREATE TABLE IF NOT EXISTS lane_4 (
   duration_minutes INTEGER NOT NULL,
   user_id INTEGER REFERENCES users(id),
   name TEXT NOT NULL,
-  extra TEXT
+  extra TEXT,
+  email TEXT
 );
 
 
@@ -65,7 +69,8 @@ CREATE TABLE IF NOT EXISTS lane_5 (
   duration_minutes INTEGER NOT NULL,
   user_id INTEGER REFERENCES users(id),
   name TEXT NOT NULL,
-  extra TEXT
+  extra TEXT,
+  email TEXT
 );
 
 
@@ -75,7 +80,8 @@ CREATE TABLE IF NOT EXISTS lane_6 (
   duration_minutes INTEGER NOT NULL,
   user_id INTEGER REFERENCES users(id),
   name TEXT NOT NULL,
-  extra TEXT
+  extra TEXT,
+  email TEXT
 );
 
 
@@ -85,7 +91,8 @@ CREATE TABLE IF NOT EXISTS lane_7 (
   duration_minutes INTEGER NOT NULL,
   user_id INTEGER REFERENCES users(id),
   name TEXT NOT NULL,
-  extra TEXT
+  extra TEXT,
+  email TEXT
 );
 
 
@@ -95,8 +102,12 @@ CREATE TABLE IF NOT EXISTS lane_8 (
   duration_minutes INTEGER NOT NULL,
   user_id INTEGER REFERENCES users(id),
   name TEXT NOT NULL,
-  extra TEXT
+  extra TEXT,
+  email TEXT
 );
 
 -- Insert demo accounts: one client and one employee
 INSERT OR IGNORE INTO users (username, password, role, email) VALUES ('admin', 'admin', 'admin', 'admin@example.com');
+INSERT OR IGNORE INTO users (username, password, role, email) VALUES ('employee', 'employee', 'employee', 'employee@example.com');
+INSERT OR IGNORE INTO users (username, password, role, email) VALUES ('client', 'client', 'client', 'client@example.com');
+

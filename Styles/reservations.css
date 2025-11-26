@@ -14,3 +14,40 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+.dashboard-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: fit-content;
+    max-width: 1200px;
+}
+
+.delete, .edit{
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 1.5rem;
+    color: #2d3a4a;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.delete {
+    background: #ff4d4d;
+}
+.delete:hover {
+    background: #ff6666;
+}
+
+.edit {
+    background: rgb(255, 200, 0);
+}
+.edit:hover {
+    background: rgb(255, 220, 0);
+}

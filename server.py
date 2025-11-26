@@ -1,3 +1,4 @@
+
 # =========================
 # Imports & Configuration
 # =========================
@@ -126,6 +127,10 @@ def register():
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
+    
+@app.route('/unknown')
+def unknown():
+    return render_template('unknown.html')
 
 @app.route('/settings', methods=['GET'])
 def settings():
@@ -219,6 +224,20 @@ def save_extra():
         flash('Selecteer een extra optie.')
         return redirect(url_for('extra'))
     session['reservation_extra'] = extra
+    return redirect(url_for('unknown'))
+
+# Handle extra selection for anonymous users (from unknown.html)
+@app.route('/save_unknown', methods=['POST'])
+def save_unknown():
+    extra = request.form.get('extra')
+    # Only update session if extra is provided, otherwise keep previous value
+    if extra:
+        session['reservation_extra'] = extra
+    # Save name and email for anonymous users
+    name = request.form.get('name', '').strip()
+    email = request.form.get('email', '').strip()
+    session['username'] = name
+    session['email'] = email
     return redirect(url_for('lanes'))
 
 @app.route('/lanes')
@@ -264,6 +283,7 @@ def select_lane():
     extra = session.get('reservation_extra')
     user_id = session.get('user_id')
     name = session.get('username', 'anonymous')
+    email = session.get('email', None)
     if not lane or not reservation:
         flash('Selecteer een baan en maak eerst een reservering.')
         return redirect(url_for('lanes'))
@@ -288,8 +308,9 @@ def select_lane():
         conn.close()
         flash(f'Baan {lane} is al gereserveerd voor dit tijdstip.')
         return redirect(url_for('lanes'))
-    conn.execute(f"INSERT INTO {table} (start_iso, duration_minutes, user_id, name, extra) VALUES (?, ?, ?, ?, ?)",
-                 (start_iso, duration, user_id, name, extra))
+    # Insert reservation with extra, name, and email
+    conn.execute(f"INSERT INTO {table} (start_iso, duration_minutes, user_id, name, extra, email) VALUES (?, ?, ?, ?, ?, ?)",
+                 (start_iso, duration, user_id, name, extra, email))
     conn.commit()
     conn.close()
     flash(f'Reservatie voor baan {lane} is opgeslagen!')
@@ -302,14 +323,13 @@ def reservations():
     from datetime import datetime
     filter_date = request.args.get('filter_date', '')
     now = datetime.now()
+    if not filter_date:
+        filter_date = now.strftime('%Y-%m-%d')
     conn = get_db_connection()
     reservations_data = {}
     for lane in range(1, 9):
         table = f'lane_{lane}'
-        if filter_date:
-            cur = conn.execute(f"SELECT * FROM {table} WHERE start_iso LIKE ? ORDER BY start_iso", (f'{filter_date}%',))
-        else:
-            cur = conn.execute(f'SELECT * FROM {table} ORDER BY start_iso')
+        cur = conn.execute(f"SELECT * FROM {table} WHERE start_iso LIKE ? ORDER BY start_iso", (f'{filter_date}%',))
         reservations_data[table] = cur.fetchall()
     conn.close()
     return render_template('reservations.html', reservations=reservations_data, filter_date=filter_date, now=now)

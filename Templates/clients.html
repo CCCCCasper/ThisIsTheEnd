@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('styles', filename='reservations.css') }}">
+</head>
+<body>
+    {% if session.get('role') == 'admin' or session.get('role') == 'employee' %}
+
+    <div class="dashboard-container">
+        <h2>Alle Reserveringen</h2>
+
+            <a href="{{ url_for('index') }}" class="action-btn" style="text-decoration: none;">Naar Home</a>
+
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>name</th>
+                    <th>email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                        <tr>
+                            <td>{{ client.username }}</td>
+                            <td>{{ client.email }}</td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <script>
+            window.location.href = "{{ url_for('index') }}";
+        </script>
+    {% endif %}
+</body>
+</html>

@@ -110,4 +110,3 @@ CREATE TABLE IF NOT EXISTS lane_8 (
 INSERT OR IGNORE INTO users (username, password, role, email) VALUES ('admin', 'admin', 'admin', 'admin@example.com');
 INSERT OR IGNORE INTO users (username, password, role, email) VALUES ('employee', 'employee', 'employee', 'employee@example.com');
 INSERT OR IGNORE INTO users (username, password, role, email) VALUES ('client', 'client', 'client', 'client@example.com');
-

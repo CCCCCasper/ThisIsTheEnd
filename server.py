@@ -2,6 +2,7 @@
 # =========================
 # Imports & Configuration
 # =========================
+from flask_mail import Mail, Message
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
 import sqlite3
 from pathlib import Path
@@ -132,17 +133,25 @@ def dashboard():
 def unknown():
     return render_template('unknown.html')
 
+@app.route('/clients')
+def clients():
+    conn = get_db_connection()
+    users = conn.execute('SELECT username, email FROM users').fetchall()
+    conn.close()
+    clients = [{'username': user['username'], 'email': user['email']} for user in users]
+    return render_template('clients.html', clients=clients)
+
 @app.route('/settings', methods=['GET'])
 def settings():
     user_id = session.get('user_id')
     if not user_id:
-        flash('Niet ingelogd.')
+        flash('Not logged in.')
         return redirect(url_for('login'))
     conn = get_db_connection()
     user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
     conn.close()
     if not user:
-        flash('Gebruiker niet gevonden.')
+        flash('User not found.')
         return redirect(url_for('login'))
     return render_template('settings.html', user=user)
 
@@ -150,19 +159,19 @@ def settings():
 def edit_account():
     user_id = session.get('user_id')
     if not user_id:
-        flash('Niet ingelogd.')
+        flash('Not logged in.')
         return redirect(url_for('login'))
     username = request.form.get('username', '').strip()
     email = request.form.get('email', '').strip()
     password = request.form.get('password', '')
     if not username or not email:
-        flash('Gebruikersnaam en e-mail zijn verplicht.')
+        flash('Username and email are required.')
         return redirect(url_for('settings'))
     conn = get_db_connection()
     cur = conn.execute('SELECT id FROM users WHERE username = ? AND id != ?', (username, user_id))
     if cur.fetchone():
         conn.close()
-        flash('Gebruikersnaam is al in gebruik.')
+        flash('Username is already taken.')
         return redirect(url_for('settings'))
     if password:
         hashed = generate_password_hash(password)
@@ -173,21 +182,21 @@ def edit_account():
     conn.close()
     session['username'] = username
     session['email'] = email
-    flash('Accountgegevens bijgewerkt.')
+    flash('Account details updated.')
     return redirect(url_for('settings'))    
 
 @app.route('/delete_account', methods=['POST'])
 def delete_account():
     user_id = session.get('user_id')
     if not user_id:
-        flash('Niet ingelogd.')
+        flash('Not logged in.')
         return redirect(url_for('login'))
     conn = get_db_connection()
     conn.execute('DELETE FROM users WHERE id = ?', (user_id,))
     conn.commit()
     conn.close()
     session.clear()
-    flash('Account verwijderd.')
+    flash('Account deleted.')
     return redirect(url_for('index'))
 
 @app.route('/a_create')

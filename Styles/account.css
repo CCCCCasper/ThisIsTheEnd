@@ -1,30 +1,39 @@
-body{
-    margin: 0;
-    min-height: 100vh;
-    width: 100vw;
-    font-family: Segoe UI, Arial, Helvetica, sans-serif;
-    padding: 4vw 2vw;
-    box-sizing: border-box;
-    background-color: rgb(200, 200, 200);
-}
-.login-container{
-    height: fit-content;
-    width: 100%;
-    max-width: 400px;
-    border: 1px solid transparent;
-    border-radius: 20px;
+body {
+    background: rgb(255, 200, 0);
+    font-family: 'Segoe UI', Arial, sans-serif;
     display: flex;
-    flex-direction: column;
-    background-color: rgb(255, 200, 0);
-    padding: 4rem 2rem 3rem 2rem;
-    margin: 0 auto;
-    box-sizing: border-box;
-    box-shadow: 0 4px 24px rgba(255, 200, 0, 0.08);
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
+
+.login-container {
+    background: #fff;
+    padding: 2.5rem 2rem 2rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    min-width: 320px;
+}
+
+h2 {
+    text-align: center;
+    color: #2d3a4a;
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #444;
+    font-weight: 500;
+}
+
 .center{
     text-align: center;
     margin: 0 auto;
 }
+
 form{
     text-align: center;
     max-width: 100%;
@@ -39,12 +48,21 @@ input{
     box-sizing: border-box;
 }
 
-button{
-    padding: 8px 12px;
-    margin: 8px auto;
+button[type="submit"] {
     width: 100%;
-    max-width: 200px;
-    display: block;
+    padding: 0.7rem;
+    background: rgb(255, 200, 0);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover {
+    background: rgb(255, 220, 0);
 }
 
 p.message{

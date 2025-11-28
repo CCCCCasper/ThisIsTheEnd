@@ -57,5 +57,29 @@ Development notes
 - If you only want to preview static HTML/CSS (no server-side rendering or auth), you can open files from `Templates/` using VS Code Live Server — but Jinja tags will not be evaluated (they are rendered only by Flask).
 - For debugging, watch the terminal running `server.py` for error messages and Flask build errors (e.g. missing endpoints cause `url_for` BuildError).
 
+Local SMTP Email Testing
+
+For development, you can test email sending without delivering real emails by using Python’s built-in SMTP debugging server:
+
+1. Open a terminal and run:
+   ```
+   python -m smtpd -c DebuggingServer -n localhost:1025
+   ```
+   This starts a local SMTP server on port 1025 that prints emails to the terminal.
+
+2. In your Flask app, set the following mail configuration:
+   ```python
+   app.config['MAIL_SERVER'] = 'localhost'
+   app.config['MAIL_PORT'] = 1025
+   app.config['MAIL_USERNAME'] = None
+   app.config['MAIL_PASSWORD'] = None
+   app.config['MAIL_USE_TLS'] = False
+   app.config['MAIL_USE_SSL'] = False
+   ```
+
+3. Restart your Flask app and send a test email. The email content will appear in the terminal running the SMTP server.
+
+**Note:** This is for development only—no emails are actually sent.
+
 If you want, I can add a short PowerShell script to automate setup and run commands.
 ```

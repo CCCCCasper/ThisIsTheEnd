@@ -1,4 +1,3 @@
-
 # =========================
 # Imports & Configuration
 # =========================
@@ -14,6 +13,19 @@ DB_PATH = ROOT / 'Database' / 'bowling.db'
 
 app = Flask(__name__, template_folder='Templates')
 app.secret_key = os.environ.get('THISISTHEEND_SECRET') or 'change-this-secret-in-production'
+
+# =========================
+# Mail Configuration
+# =========================
+app.config['MAIL_SERVER'] = 'localhost'
+app.config['MAIL_PORT'] = 1025
+app.config['MAIL_USERNAME'] = None
+app.config['MAIL_PASSWORD'] = None
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = False
+
+# Initialize Flask-Mail
+mail = Mail(app)
 
 # =========================
 # Helper Functions
@@ -44,6 +56,24 @@ def safe_redirect(endpoint, **values):
 # =========================
 # Route Handlers
 # =========================
+
+# Test mail route
+@app.route('/test_mail')
+def test_mail():
+    try:
+        msg = Message(
+            subject='Test Email from ThisIsTheEnd',
+            recipients=['thisistheendpart2@outlook.com'],
+            body='This is a test email sent from your Flask app.'
+        )
+        mail.send(msg)
+        flash('Test email sent successfully!')
+    except Exception as e:
+        import traceback
+        print('Failed to send test email:', e)
+        traceback.print_exc()
+        flash(f'Failed to send test email: {e}')
+    return redirect(url_for('index'))
 
 # Main pages
 @app.route('/')
@@ -408,4 +438,4 @@ if __name__ == '__main__':
         print('Database not found at', DB_PATH)
         print('Run: python Database/create_db.py')
     app.run(host='127.0.0.1', port=5000, debug=True)
-        
+

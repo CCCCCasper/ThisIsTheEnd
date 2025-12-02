@@ -4,21 +4,22 @@
     <meta charset="UTF-8">
     <title>Employee Dashboard</title>
 
-    <link rel="stylesheet" href="{{ url_for('styles', filename='reservations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('styles', filename='clients.css') }}">
 </head>
 <body>
     {% if session.get('role') == 'admin' or session.get('role') == 'employee' %}
 
     <div class="dashboard-container">
-        <h2>Alle Reserveringen</h2>
+        <button class="back-btn" onclick="window.history.back(); return false;">&larr; Back</button>
 
-            <a href="{{ url_for('index') }}" class="action-btn" style="text-decoration: none;">Naar Home</a>
+        <h2>All Clients</h2>
+
 
         <table class="dashboard-table">
             <thead>
                 <tr>
-                    <th>name</th>
-                    <th>email</th>
+                    <th>Name</th>
+                    <th>Email</th>
                 </tr>
             </thead>
             <tbody>

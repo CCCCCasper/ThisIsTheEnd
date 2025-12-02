@@ -427,7 +427,6 @@ def test_mail():
         flash('Test email sent successfully!')
     except Exception as e:
         import traceback
-        print('Failed to send test email:', e)
         traceback.print_exc()
         flash(f'Failed to send test email: {e}')
     return redirect(url_for('index'))

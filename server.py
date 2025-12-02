@@ -23,6 +23,7 @@ app.config['MAIL_USERNAME'] = None
 app.config['MAIL_PASSWORD'] = None
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_DEFAULT_SENDER'] = 'test@localhost'
 
 # Initialize Flask-Mail
 mail = Mail(app)
@@ -54,32 +55,35 @@ def safe_redirect(endpoint, **values):
             return redirect('/')
 
 # =========================
-# Route Handlers
+# Small/Simple Routes
 # =========================
-
-# Test mail route
-@app.route('/test_mail')
-def test_mail():
-    try:
-        msg = Message(
-            subject='Test Email from ThisIsTheEnd',
-            recipients=['thisistheendpart2@outlook.com'],
-            body='This is a test email sent from your Flask app.'
-        )
-        mail.send(msg)
-        flash('Test email sent successfully!')
-    except Exception as e:
-        import traceback
-        print('Failed to send test email:', e)
-        traceback.print_exc()
-        flash(f'Failed to send test email: {e}')
-    return redirect(url_for('index'))
-
-# Main pages
 @app.route('/')
 def index():
     return render_template('index.html')
 
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
+@app.route('/unknown')
+def unknown():
+    return render_template('unknown.html')
+
+@app.route('/a_create')
+def a_create():
+    return render_template('a_create.html')
+
+@app.route('/e_create')
+def e_create():
+    return render_template('e_create.html')
+
+@app.route('/Styles/<path:filename>')
+def styles(filename):
+    return send_from_directory(str(ROOT / 'Styles'), filename)
+
+# =========================
+# Authentication & Account Routes
+# =========================
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
@@ -147,29 +151,13 @@ def register():
         flash('Username already exists.')
         return redirect(url_for('register'))
     hashed = generate_password_hash(password)
-    role = request.form.get('role')
+    role = request.form.get('role') or 'client'
     conn.execute('INSERT INTO users (username, password, role, email) VALUES (?, ?, ?, ?)',
                  (username, hashed, role, email))
     conn.commit()
     conn.close()
     flash('Account registered — please log in.')
     return redirect(url_for('login'))
-
-@app.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html')
-    
-@app.route('/unknown')
-def unknown():
-    return render_template('unknown.html')
-
-@app.route('/clients')
-def clients():
-    conn = get_db_connection()
-    users = conn.execute('SELECT username, email FROM users').fetchall()
-    conn.close()
-    clients = [{'username': user['username'], 'email': user['email']} for user in users]
-    return render_template('clients.html', clients=clients)
 
 @app.route('/settings', methods=['GET'])
 def settings():
@@ -229,14 +217,17 @@ def delete_account():
     flash('Account deleted.')
     return redirect(url_for('index'))
 
-@app.route('/a_create')
-def a_create():
-    return render_template('a_create.html')
+@app.route('/clients')
+def clients():
+    conn = get_db_connection()
+    users = conn.execute('SELECT username, email FROM users').fetchall()
+    conn.close()
+    clients = [{'username': user['username'], 'email': user['email']} for user in users]
+    return render_template('clients.html', clients=clients)
 
-@app.route('/e_create')
-def e_create():
-    return render_template('e_create.html')
-
+# =========================
+# Reservation Routes
+# =========================
 @app.route('/reservation')
 def reservation():
     return render_template('reservation.html')
@@ -422,12 +413,24 @@ def delete_reservation():
     return redirect(url_for('reservations'))
 
 # =========================
-# Static Asset Routes
+# Test & Utility Routes
 # =========================
-
-@app.route('/Styles/<path:filename>')
-def styles(filename):
-    return send_from_directory(str(ROOT / 'Styles'), filename)
+@app.route('/test_mail')
+def test_mail():
+    try:
+        msg = Message(
+            subject='Test Email from ThisIsTheEnd',
+            recipients=['thisistheendpart2@outlook.com'],
+            body='This is a test email sent from your Flask app.'
+        )
+        mail.send(msg)
+        flash('Test email sent successfully!')
+    except Exception as e:
+        import traceback
+        print('Failed to send test email:', e)
+        traceback.print_exc()
+        flash(f'Failed to send test email: {e}')
+    return redirect(url_for('index'))
 
 # =========================
 # App Entry Point

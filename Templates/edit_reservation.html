@@ -1,0 +1,120 @@
+<head>
+    <link rel="stylesheet" href="{{ url_for('styles', filename='reservation.css') }}">
+</head>
+<body>
+    <div class="reservation-container">
+        <button class="back-btn" onclick="window.history.back(); return false;">&larr; Back</button>
+        <h2>Edit Reservation</h2>
+        <form method="post" action="{{ url_for('update_reservation') }}">
+            <input type="hidden" name="lane" value="{{ lane }}">
+            <input type="hidden" name="start_iso" value="{{ reservation.start_iso }}">
+            <input type="hidden" id="duration_minutes" name="duration_minutes" value="{{ reservation.duration_minutes }}">
+            <label for="date">Date</label>
+            <div class="custom-input">
+                <input type="date" id="date" name="date" value="{{ reservation.start_iso[:10] }}" required>
+            </div>
+            <label for="time">Start Time</label>
+            <div class="custom-input">
+                <select id="time" name="time" required>
+                    <option value="{{ reservation.start_iso[11:16] }}">{{ reservation.start_iso[11:16] }}</option>
+                </select>
+            </div>
+            <label for="end_time">End Time</label>
+            <div class="custom-input">
+                <select id="end_time" name="end_time" required>
+                    <option value="">Select an end time</option>
+                </select>
+            </div>
+            <label for="extra">Extra:</label>
+            <select id="extra" name="extra" required>
+                <option value="snackpakket_basis" {% if reservation.extra == 'snackpakket_basis' %}selected{% endif %}>Snackpakket Basis</option>
+                <option value="snackpakket_deluxe" {% if reservation.extra == 'snackpakket_deluxe' %}selected{% endif %}>Snackpakket Deluxe</option>
+                <option value="kinderpartij" {% if reservation.extra == 'kinderpartij' %}selected{% endif %}>Kinderpartij</option>
+                <option value="vrijgezellenfeest" {% if reservation.extra == 'vrijgezellenfeest' %}selected{% endif %}>Vrijgezellenfeest</option>
+                <option value="niks" {% if reservation.extra == 'niks' %}selected{% endif %}>Niks</option>
+            </select><br>
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+    <script>
+    function pad(num) {
+        return num < 10 ? '0' + num : num;
+    }
+    function getTimeOptions(day, forEndTime = false) {
+        let startHour = 14;
+        let endHour = (day === 0 || day === 6) ? 24 : 22;
+        let options = [];
+        let last = forEndTime ? endHour : endHour - 1;
+        for (let hour = startHour; hour <= last; hour++) {
+            options.push(pad(hour) + ':00');
+        }
+        return options;
+    }
+    function populateTimes() {
+        const dateInput = document.getElementById('date');
+        const timeSelect = document.getElementById('time');
+        const endTimeSelect = document.getElementById('end_time');
+        timeSelect.innerHTML = '<option value="">Select a start time</option>';
+        endTimeSelect.innerHTML = '<option value="">Select an end time</option>';
+        if (!dateInput.value) return;
+        const date = new Date(dateInput.value);
+        const day = date.getDay();
+        let options = getTimeOptions(day, false);
+        for (let i = 0; i < options.length; i++) {
+            let option = document.createElement('option');
+            option.value = options[i];
+            option.textContent = options[i];
+            timeSelect.appendChild(option);
+        }
+    }
+    function populateEndTimes() {
+        const dateInput = document.getElementById('date');
+        const timeSelect = document.getElementById('time');
+        const endTimeSelect = document.getElementById('end_time');
+        endTimeSelect.innerHTML = '<option value="">Select an end time</option>';
+        if (!dateInput.value || !timeSelect.value) return;
+        const date = new Date(dateInput.value);
+        const day = date.getDay();
+        let options = getTimeOptions(day, true);
+        let startIndex = options.indexOf(timeSelect.value);
+        for (let i = startIndex + 1; i < options.length; i++) {
+            let option = document.createElement('option');
+            option.value = options[i];
+            option.textContent = options[i];
+            endTimeSelect.appendChild(option);
+        }
+    }
+    function updateDuration() {
+        const timeSelect = document.getElementById('time');
+        const endTimeSelect = document.getElementById('end_time');
+        const durationInput = document.getElementById('duration_minutes');
+        if (!timeSelect.value || !endTimeSelect.value) {
+            durationInput.value = '';
+            return;
+        }
+        // Parse times as minutes since midnight
+        function toMinutes(str) {
+            let [h, m] = str.split(':');
+            return parseInt(h) * 60 + parseInt(m);
+        }
+        let start = toMinutes(timeSelect.value);
+        let end = toMinutes(endTimeSelect.value);
+        durationInput.value = end - start;
+    }
+    document.getElementById('date').addEventListener('change', function() {
+        populateTimes();
+        populateEndTimes();
+        updateDuration();
+    });
+    document.getElementById('time').addEventListener('change', function() {
+        populateEndTimes();
+        updateDuration();
+    });
+    document.getElementById('end_time').addEventListener('change', updateDuration);
+    window.addEventListener('DOMContentLoaded', function() {
+        populateTimes();
+        populateEndTimes();
+        updateDuration();
+    });
+    </script>
+</body>

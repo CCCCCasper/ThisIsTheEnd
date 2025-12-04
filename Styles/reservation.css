@@ -46,10 +46,10 @@
             position: relative;
             margin-bottom: 1.2rem;
         }
-        input[type="date"], select {
+        input[type="date"], select, input[type="text"] {
             width: 100%;
             padding: 0.5rem 2.2rem 0.5rem 0.7rem;
-            border: 1px solid #cfd8dc;
+            border: 1px solid black;
             border-radius: 6px;
             font-size: 1.25rem;
             height: 2.7rem;
@@ -62,6 +62,11 @@
         input[type="date"]:focus, select:focus {
             border: 1.5px solid rgb(255, 200, 0);
             outline: none;
+        }
+        input[type="text"]:focus {
+            border: 1.5px solid rgb(255, 200, 0);
+            outline: none;
+            margin-bottom: 2%rem;
         }
         /* Custom dropdown arrow for select */
         .custom-input select {

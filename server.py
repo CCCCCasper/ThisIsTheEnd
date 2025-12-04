@@ -412,6 +412,31 @@ def delete_reservation():
     flash('Reservering verwijderd.')
     return redirect(url_for('reservations'))
 
+# Update reservation (POST)
+@app.route('/update_reservation', methods=['POST'])
+def update_reservation():
+    lane = request.form.get('lane')
+    old_start_iso = request.form.get('start_iso')
+    new_start_iso = request.form.get('new_start_iso')
+    duration_minutes = request.form.get('duration_minutes')
+    extra = request.form.get('extra')
+    name = request.form.get('name')
+    email = request.form.get('email')
+    if not lane or not old_start_iso:
+        flash('Ongeldige reservering.')
+        return redirect(url_for('reservations'))
+    table = f'lane_{lane}'
+    conn = get_db_connection()
+    # Remove old reservation
+    conn.execute(f'DELETE FROM {table} WHERE start_iso = ?', (old_start_iso,))
+    # Insert updated reservation
+    conn.execute(f"INSERT INTO {table} (start_iso, duration_minutes, extra, name, email) VALUES (?, ?, ?, ?, ?)",
+                 (new_start_iso, duration_minutes, extra, name, email))
+    conn.commit()
+    conn.close()
+    flash('Reservering bijgewerkt!')
+    return redirect(url_for('reservations'))
+
 # =========================
 # Test & Utility Routes
 # =========================

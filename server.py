@@ -1,6 +1,8 @@
 # =========================
 # Imports & Configuration
 # =========================
+# In dit bestand staan alle serverroutes en hulpfuncties voor de bowling-applicatie.
+# Flask en andere benodigde modules importeren
 from flask_mail import Mail, Message
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
 import sqlite3
@@ -8,14 +10,16 @@ from pathlib import Path
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
+# Pad naar de hoofdmap en database instellen
 ROOT = Path(__file__).resolve().parent
 DB_PATH = ROOT / 'Database' / 'bowling.db'
 
+# Flask-applicatie initialiseren
 app = Flask(__name__, template_folder='Templates')
 app.secret_key = os.environ.get('THISISTHEEND_SECRET') or 'change-this-secret-in-production'
 
 # =========================
-# Mail Configuration
+# Mail Configuratie
 # =========================
 app.config['MAIL_SERVER'] = 'localhost'
 app.config['MAIL_PORT'] = 1025
@@ -25,17 +29,54 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_DEFAULT_SENDER'] = 'test@localhost'
 
-# Initialize Flask-Mail
+# Flask-Mail initialiseren
 mail = Mail(app)
 
 # =========================
-# Helper Functions
+# Hulpfuncties
 # =========================
+# Maakt een verbinding met de SQLite database
 def get_db_connection():
-    conn = sqlite3.connect(str(DB_PATH))
+    conn = sqlite3.connect(str(DB_PATH), timeout=10)
     conn.row_factory = sqlite3.Row
     return conn
 
+# =========================
+# Hulpfuncties voor reserveringstijden
+# =========================
+from datetime import datetime
+# Genereert een lijst met tijdopties voor een bepaalde dag
+def get_time_options(day_of_week, for_end_time=False):
+    start_hour = 14
+    end_hour = 24 if day_of_week in (0, 6) else 22
+    options = []
+    last = end_hour if for_end_time else end_hour - 1
+    for hour in range(start_hour, last + 1):
+        options.append(f"{hour:02d}:00")
+    return options
+
+# Bepaalt de start- en eindtijdopties op basis van de datum en huidige starttijd
+def get_start_end_time_options(date_str, current_start=None):
+    """
+    date_str: 'YYYY-MM-DD' (from reservation.start_iso[:10])
+    current_start: 'HH:MM' (optional, for pre-selecting end times)
+    Returns (start_options, end_options)
+    """
+    try:
+        date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+        day_of_week = date_obj.weekday()
+    except Exception:
+        # fallback: standaard naar een doordeweekse dag
+        day_of_week = 2
+    start_options = get_time_options(day_of_week, for_end_time=False)
+    end_options = get_time_options(day_of_week, for_end_time=True)
+    # Filter eindopties zodat alleen tijden na current_start overblijven
+    if current_start and current_start in end_options:
+        idx = end_options.index(current_start)
+        end_options = end_options[idx+1:]
+    return start_options, end_options
+
+# Probeert te redirecten met url_for, anders valt hij terug op een simpel pad
 def safe_redirect(endpoint, **values):
     """Try redirecting using url_for, fall back to simple path '/endpoint'."""
     try:
@@ -394,7 +435,17 @@ def edit_reservation():
     if not res:
         flash('Reservering niet gevonden.')
         return redirect(url_for('reservations'))
-    return render_template('edit_reservation.html', reservation=res, lane=lane)
+    # Generate time options
+    date_str = res['start_iso'][:10]
+    current_start = res['start_iso'][11:16]
+    start_options, end_options = get_start_end_time_options(date_str, current_start)
+    return render_template(
+        'edit_reservation.html',
+        reservation=res,
+        lane=lane,
+        start_options=start_options,
+        end_options=end_options,
+    )
 
 # Delete reservation (POST)
 @app.route('/delete_reservation', methods=['POST'])
@@ -417,14 +468,26 @@ def delete_reservation():
 def update_reservation():
     lane = request.form.get('lane')
     old_start_iso = request.form.get('start_iso')
-    new_start_iso = request.form.get('new_start_iso')
+    date = request.form.get('date')
+    time = request.form.get('time')
     duration_minutes = request.form.get('duration_minutes')
     extra = request.form.get('extra')
     name = request.form.get('name')
     email = request.form.get('email')
-    if not lane or not old_start_iso:
+    if not lane or not old_start_iso or not date or not time:
         flash('Ongeldige reservering.')
         return redirect(url_for('reservations'))
+    if not name or not email:
+        # Fetch previous reservation to get name/email if not provided
+        table = f'lane_{lane}'
+        conn = get_db_connection()
+        prev = conn.execute(f'SELECT name, email FROM {table} WHERE start_iso = ?', (old_start_iso,)).fetchone()
+        if not name and prev:
+            name = prev['name']
+        if not email and prev:
+            email = prev['email']
+        conn.close()
+    new_start_iso = f"{date}T{time}"
     table = f'lane_{lane}'
     conn = get_db_connection()
     # Remove old reservation
@@ -444,8 +507,8 @@ def update_reservation():
 def test_mail():
     try:
         msg = Message(
-            subject='Test Email from ThisIsTheEnd',
-            recipients=['thisistheendpart2@outlook.com'],
+            subject='Test Email from Flask App',
+            recipients=['thisisatest@outlook.com'],
             body='This is a test email sent from your Flask app.'
         )
         mail.send(msg)

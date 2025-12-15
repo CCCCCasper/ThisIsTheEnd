@@ -1,3 +1,35 @@
+/* Responsive styles */
+@media (max-width: 900px) {
+    .dashboard-container {
+        max-width: 98vw;
+        padding: 2vw 1vw;
+    }
+    .dashboard-table th, .dashboard-table td {
+        padding: 4px;
+        font-size: 0.95em;
+    }
+}
+
+@media (max-width: 600px) {
+    .dashboard-container {
+        padding: 2vw 1vw;
+        border-radius: 8px;
+        width: 100vw;
+        min-width: unset;
+    }
+    .dashboard-table, .dashboard-table th, .dashboard-table td {
+        font-size: 0.85em;
+    }
+    .action-btn, .delete, .edit {
+        padding: 0.3rem 0.7rem;
+        font-size: 0.95em;
+    }
+    body {
+        flex-direction: column;
+        padding: 2vw 1vw;
+        align-items: stretch;
+    }
+}
 .dashboard-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
 .dashboard-table th, .dashboard-table td { border: 1px solid #ccc; padding: 8px; text-align: center; }
 .dashboard-table th { background: #f4f4f4; }

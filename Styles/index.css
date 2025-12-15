@@ -1,3 +1,26 @@
+/* Responsive styles */
+@media (max-width: 900px) {
+    .box {
+        max-width: 98vw;
+        padding: 4vw 2vw;
+    }
+}
+
+@media (max-width: 600px) {
+    .box {
+        width: 99vw;
+        padding: 7vw 3vw;
+        border-radius: 10px;
+    }
+    .center {
+        font-size: 0.95em;
+    }
+    body {
+        padding: 2vw 1vw;
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
 body {
     max-height: 100vh;
     height: 100vh;

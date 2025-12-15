@@ -1,52 +1,33 @@
-.dashboard-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-.dashboard-table th, .dashboard-table td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-.dashboard-table th { background: #f4f4f4; }
-.lane-header { background: #e0e0e0; font-weight: bold; }
-.action-btn { margin: 0 4px; padding: 4px 10px; }
 
-body {
-    background: rgb(255, 200, 0);
-    font-family: 'Segoe UI', Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* Responsive styles */
+@media (max-width: 900px) {
+    .dashboard-container {
+        max-width: 98vw;
+        padding: 2vw 1vw;
+    }
+    .dashboard-table th, .dashboard-table td {
+        padding: 4px;
+        font-size: 0.95em;
+    }
 }
 
-.dashboard-container {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: fit-content;
-    max-width: 1200px;
-}
-
-.delete, .edit{
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    color: #2d3a4a;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-.delete {
-    background: #ff4d4d;
-}
-.delete:hover {
-    background: #ff6666;
-}
-
-.edit {
-    background: rgb(255, 200, 0);
-}
-.edit:hover {
-    background: rgb(255, 220, 0);
+@media (max-width: 600px) {
+    .dashboard-container {
+        padding: 2vw 1vw;
+        border-radius: 8px;
+        width: 100vw;
+        min-width: unset;
+    }
+    .dashboard-table, .dashboard-table th, .dashboard-table td {
+        font-size: 0.85em;
+    }
+    .action-btn, .delete, .edit {
+        padding: 0.3rem 0.7rem;
+        font-size: 0.95em;
+    }
+    body {
+        flex-direction: column;
+        padding: 2vw 1vw;
+        align-items: stretch;
+    }
 }

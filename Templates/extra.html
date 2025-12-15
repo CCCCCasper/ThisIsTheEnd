@@ -5,7 +5,7 @@
 <body>
 	<div class="reservation-container">
         <button class="back-btn" onclick="window.history.back(); return false;">&larr; Back</button>
-		<h2>Kies een extra optie</h2>
+		<h2>Choose an extra option</h2>
 		<form action="{{ url_for('save_extra') }}" method="post">
 			<div class="custom-input">
 				<label><input type="radio" name="extra" value="snackpakket_basis" required> Snackpakket Basis</label><br>

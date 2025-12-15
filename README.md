@@ -82,4 +82,26 @@ For development, you can test email sending without delivering real emails by us
 **Note:** This is for development only—no emails are actually sent.
 
 If you want, I can add a short PowerShell script to automate setup and run commands.
+
+### Testing Email Functionality
+
+This app includes a test route to verify email sending in development:
+
+- Visit [http://127.0.0.1:5000/test_mail](http://127.0.0.1:5000/test_mail) in your browser while the Flask server is running.
+- This triggers the `/test_mail` route, which attempts to send a test email to `thisistheendpart2@outlook.com` using the local SMTP server (see above).
+- If successful, you’ll see a flash message: `Test email sent successfully!` and the email content will appear in the terminal running the SMTP server.
+- If there’s an error, a flash message will show the error details.
+
+**Example output in SMTP debug terminal:**
+```
+---------- MESSAGE FOLLOWS ----------
+From: test@localhost
+To: thisistheendpart2@outlook.com
+Subject: Test Email from ThisIsTheEnd
+
+This is a test email sent from your Flask app.
+------------ END MESSAGE ------------
+```
+
+This is useful for verifying that your Flask-Mail configuration and email templates work as expected during development.
 ```

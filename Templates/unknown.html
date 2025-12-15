@@ -6,7 +6,7 @@
     {% if not session.get('user_id') %}
         <div class="reservation-container">
             <button class="back-btn" onclick="window.history.back(); return false;">&larr; Back</button>
-            <h2>Choose an extra option</h2>
+            <h2>Fill in your name and e-mail</h2>
             <form action="{{ url_for('save_unknown') }}" method="post">
                 <div class="custom-input">
 

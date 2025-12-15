@@ -1,3 +1,28 @@
+/* Responsive styles */
+@media (max-width: 900px) {
+    .results-container {
+        max-width: 98vw;
+        padding: 2vw 1vw;
+    }
+}
+
+@media (max-width: 600px) {
+    .results-container {
+        padding: 4vw 2vw;
+        border-radius: 8px;
+        width: 100vw;
+        min-width: unset;
+    }
+    .back-btn {
+        font-size: 0.95em;
+        padding: 0.3rem 0.7rem;
+    }
+    body {
+        flex-direction: column;
+        padding: 2vw 1vw;
+        align-items: stretch;
+    }
+}
 body {
     background: rgb(255, 200, 0);
     font-family: 'Segoe UI', Arial, sans-serif;

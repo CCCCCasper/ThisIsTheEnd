@@ -1,3 +1,33 @@
+                        /* Ensure .edit and .delete buttons do NOT inherit button[type="submit"] styles */
+                        button.edit, button.delete {
+                            width: auto !important;
+                            padding: 0.5rem 1.2rem !important;
+                            background: unset !important;
+                            color: unset !important;
+                            border: none !important;
+                            border-radius: 6px !important;
+                            font-size: 1rem !important;
+                            font-weight: 600 !important;
+                            cursor: pointer !important;
+                            transition: background 0.2s, color 0.2s !important;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+                            display: inline-block !important;
+                        }
+                        button.edit {
+                            background: #1976d2 !important;
+                            color: #fff !important;
+                        }
+                        button.edit:hover {
+                            background: #4791db !important;
+                        }
+                        button.delete {
+                            background: #ff4d4d !important;
+                            color: #fff !important;
+                        }
+                        button.delete:hover {
+                            background: #ff6666 !important;
+                        }
+                
         .back-btn {
             display: inline-block;
             margin-bottom: 1.5rem;
@@ -24,7 +54,7 @@
             height: 100vh;
             margin: 0;
         }
-        .reservation-container {
+        .reservation-container, .dashboard-container {
             background: #fff;
             padding: 2.5rem 2rem 2rem 2rem;
             border-radius: 12px;
@@ -46,7 +76,12 @@
             position: relative;
             margin-bottom: 1.2rem;
         }
-        input[type="date"], select, input[type="text"] {
+
+        #class [type="delete"] {
+
+            background-color: red;
+        }
+        input[type="date"], select, input[type="text"], input[type="email"] {
             width: 100%;
             padding: 0.5rem 2.2rem 0.5rem 0.7rem;
             border: 1px solid black;
@@ -63,7 +98,7 @@
             border: 1.5px solid rgb(255, 200, 0);
             outline: none;
         }
-        input[type="text"]:focus {
+        input[type="text"]:focus, input[type="email"]:focus {
             border: 1.5px solid rgb(255, 200, 0);
             outline: none;
             margin-bottom: 2%rem;
@@ -90,4 +125,47 @@
         }
         button[type="submit"]:hover {
             background: rgb(255, 220, 0);
+        }
+
+       
+
+        .lane-header {
+            margin-bottom: 1.5rem;
+            color: #2d3a4a;
+            font-weight: 700;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 900px) {
+            .reservation-container {
+                min-width: 220px;
+                padding: 1.5rem 1rem 1rem 1rem;
+            }
+            input[type="date"], select, input[type="text"] {
+                font-size: 1rem;
+                height: 2.2rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .reservation-container {
+                min-width: unset;
+                width: 98vw;
+                padding: 4vw 2vw 2vw 2vw;
+                border-radius: 8px;
+            }
+            h2 {
+                font-size: 1.2rem;
+            }
+            input[type="date"], select, input[type="text"] {
+                font-size: 0.95rem;
+                height: 2rem;
+            }
+            button[type="submit"] {
+                font-size: 1rem;
+            }
+            body {
+                flex-direction: column;
+                padding: 2vw 1vw;
+                align-items: stretch;
+            }
         }
